@@ -6,7 +6,7 @@ import java.util.Stack;
 
 /**
  * Models and prints a maze as a specified nxn grid of cells. Solutions are 
- * randomly generated pathways with exactly one entrance and exit.
+ * randomly generated pathways with exactly one entrance and exit
  */
 public class Maze
 {
