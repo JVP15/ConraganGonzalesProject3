@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Models a 1x1 cell for use in a grid. Each cell object keeps track of
- * the location and state of nieghboring cells
+ * the location and state of nieghboring cells.
  */
 
 public class Cell
