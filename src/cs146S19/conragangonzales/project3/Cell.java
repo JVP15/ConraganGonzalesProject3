@@ -92,4 +92,8 @@ public class Cell {
 		}
 		return doorway;
 	}
+	
+	public ArrayList<Cell> getDoorways() {
+		return doorways;
+	}
 }

@@ -134,4 +134,23 @@ public class Maze {
 		cells[width - 1][height - 1].setSouth(end);
 		cells[width - 1][height - 1].knockDownWall(end);
 	}
+	
+	
+	
+	// Size = total # of cells in a maze
+	public int getSize() {
+		return width*height;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public Cell[][] getCells() {
+		return cells;
+	}
 }
