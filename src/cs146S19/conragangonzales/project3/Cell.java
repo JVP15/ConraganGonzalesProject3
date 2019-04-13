@@ -4,62 +4,69 @@ import java.util.ArrayList;
 
 /**
  * Models a 1x1 cell for use in a grid. Each cell object keeps track of the
- * location and state of nieghboring cells.
+ * location and state of neighboring cells.
  */
 
-public class Cell
+public class Cell extends Vertex
 {
-	public enum Direction { NORTH, SOUTH, EAST, WEST };
+	public static final int NORTH = 0;
+	public static final int EAST = 1;
+	public static final int SOUTH = 2;
+	public static final int WEST = 3;
+	public static final int NUMBER_OF_DIRECTIONS = 4;
+	public static final int OPPOSITE_DIRECTION_OFFSET = 2;
 
 	// List of any neighboring cells without intact walls
-	private Cell[] doorways;
+	private boolean[] doorways;
 	// True if every cell wall is intact, otherwise false
 	private boolean wallsIntact;
+	
+	private int row;
+	private int column;
 
 	/**
-	 * Cell ctor initializes cell and properties.
+	 * Constructor
 	 */
-	public Cell()
+	public Cell(int row, int column)
 	{
-		doorways = new Cell[] {null, null, null, null};
-
-		wallsIntact = true;		
+		super();
+		
+		this.row = row;
+		this.column = column;
+		doorways = new boolean[] {false, false, false, false};
+		wallsIntact = true;	
+	}
+	
+	public int getRow()
+	{
+		return row;
 	}
 
+	public int getColumn()
+	{
+		return column;
+	}
+
+	/**
+	 * Determines if a Cell has all of its wall intact
+	 * In other words, there are no doorways to or from the Cell
+	 * @return Whether the Cell has all of its walls intact
+	 */
 	public boolean areWallsIntact()
 	{
 		return wallsIntact;
 	}
-
-
-	public void openDoorwayToo(Cell cell, Direction d)
+	
+	public void openDoorwayTo(int direction)
 	{
-		switch (d)
-		{
-			case NORTH: 
-				doorways[0] = cell; wallsIntact = false; break;
-			case EAST:
-				doorways[1] = cell; wallsIntact = false; break;
-			case WEST: 
-				doorways[2] = cell; wallsIntact = false; break;
-			case SOUTH: 
-				doorways[3] = cell; wallsIntact = false; break;
-		}
+			
+			doorways[direction % NUMBER_OF_DIRECTIONS] = true;
+			wallsIntact = false;
 	}
 
 
-	public boolean hasDoorwayTo(Direction d)
+	public boolean hasDoorwayTo(int direction)
 	{
-		if(d == Direction.NORTH && doorways[0] != null)
-			return true; 
-		else if(d == Direction.EAST && doorways[1] != null)
-			return true; 
-		else if(d == Direction.WEST && doorways[2] != null)
-			return true; 
-		else if(d == Direction.SOUTH && doorways[3] != null)
-			return true; 
-		
-		else
-			return false;
+		return doorways[direction % NUMBER_OF_DIRECTIONS];
 	}
 }
