@@ -1,5 +1,7 @@
 package cs146S19.conragangonzales.project3;
 
+import java.util.ArrayList;
+
 /**
  * 
  * Models a single cell in a maze
@@ -77,5 +79,24 @@ public class Cell extends Vertex
 	public boolean hasDoorwayTo(int direction)
 	{
 		return doorways[direction % NUMBER_OF_DIRECTIONS];
+	}
+	
+	/**
+	 * Gets an ArrayList that contains the directions that the cell has a doorway to
+	 * @return an ArrayList that contains the directions that the cell has a doorway to
+	 */
+	public ArrayList<Integer> getDoorways()
+	{
+		ArrayList<Integer> doorwayList = new ArrayList<>();
+		
+		for(int i = 0; i < NUMBER_OF_DIRECTIONS; i++)
+		{
+			if(doorways[i] == true)
+			{
+				doorwayList.add(i);
+			}
+		}
+		
+		return doorwayList;
 	}
 }
