@@ -1,8 +1,6 @@
 package cs146S19.conragangonzales.project3;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Models and prints a maze as a specified nxn grid of cells. Solutions are
@@ -13,6 +11,7 @@ public class Maze
 	private Cell[][] cells;
 	private int width;
 	private int height;
+	private LinkedList<Cell> adjList[];
 
 	/**
 	 * Maze ctor creates a maze with specified width and height.
@@ -29,6 +28,8 @@ public class Maze
 		initializeCells();
 		// Construct the maze
 		createMaze();
+		
+		initializeAdjList();
 	}
 
 	/**
@@ -135,6 +136,33 @@ public class Maze
 		cells[width - 1][height - 1].openDoorwayTo(Cell.SOUTH);
 	}
 
+	/**
+	 * Initialize this maze's adjacency list array.
+	 * Each spot in the array contains a vertex (cell) which points to its edges (neighbors).
+	 * EX: adjList[0] has Cells (0,0)->(0,1)->(1,0)
+	 * 	   adjList[1] has Cells (0,1)->(0,0)->(0,2)
+	 * 	   etc.
+	 */
+	public void initializeAdjList() 
+	{
+		int n = getSize();
+		adjList = new LinkedList[n];
+		// Store all the maze's cells into a list
+		ArrayList<Cell> cells = getCellsAsList();
+		for(int i=0; i<n; i++) 
+		{
+			Cell currentVertex = cells.get(i);
+			// Create a new list, add cell as the head
+			adjList[i] = new LinkedList<Cell>();
+			adjList[i].add(currentVertex);
+			
+			// Add cell's neighbors to the list
+			ArrayList<Cell> currentEdges = getNeighbors(currentVertex);
+			for(Cell edge: currentEdges)
+				adjList[i].add(edge);
+		}
+	}
+	
 	public ArrayList<Integer> getPotentialDoorways(int row, int col)
 	{
 		ArrayList<Integer> doorways = new ArrayList<>();
@@ -152,6 +180,40 @@ public class Maze
 			doorways.add(Cell.SOUTH);
 
 		return doorways;
+	}
+	//TODO: This breaks on last cell in the grid (test with MazeTest.java)
+	public ArrayList<Cell> getNeighbors(Cell cell)
+	{
+		ArrayList<Cell> neighbors = new ArrayList<>();
+		
+		ArrayList<Integer> doorways = cell.getDoorways();
+		for(int doorway : doorways) 
+		{
+			int row = cell.getRow();
+			int col = cell.getColumn();
+			// Add cells with doorways as neighbors
+			switch(doorway) 
+			{
+			case Cell.NORTH:
+				neighbors.add(cells[row - 1][col]);
+				break;
+			case Cell.EAST:
+				neighbors.add(cells[row][col + 1]);
+				break;
+			case Cell.SOUTH:
+				neighbors.add(cells[row + 1][col]);
+				break;
+			case Cell.WEST:
+				neighbors.add(cells[row][col - 1]);
+				break;
+			}
+		}
+		return neighbors;
+	}
+	
+	public LinkedList<Cell>[] getAdjList() 
+	{
+		return adjList;
 	}
 
 	// Size = total # of cells in a maze
@@ -173,5 +235,16 @@ public class Maze
 	public Cell[][] getCells()
 	{
 		return cells;
+	}
+	
+	public ArrayList<Cell> getCellsAsList() 
+	{
+		ArrayList<Cell> cellList = new ArrayList<>();
+		
+		for (int i = 0; i < getWidth(); i++) 
+			for (int j = 0; j < getHeight(); j++) 
+				cellList.add(cells[i][j]);
+				
+		return cellList;	
 	}
 }

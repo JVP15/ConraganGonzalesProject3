@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class MazeAsGraph {
 	private Maze maze;
-	private LinkedList<Vertex> adjListArray[];
+	private LinkedList<Cell> adjListArray[];
 
 	public MazeAsGraph(Maze maze) {
 		this.maze = maze;
@@ -26,12 +26,27 @@ public class MazeAsGraph {
 		for (int i = 0; i < maze.getWidth(); i++) {
 			for (int j = 0; j < maze.getHeight(); j++) {
 				Cell currentCell = cells[i][j];
+				int currentRow = currentCell.getRow();
+				int currentCol = currentCell.getColumn();
 				
 				// Store the edges (doorways) of each vertex in adjList
-				ArrayList<Cell> edges = currentCell.getDoorways();
-				for (Cell edge: edges)
-					adjListArray[index].add(new Vertex(edge));
-				
+				ArrayList<Integer> edgeDirections = currentCell.getDoorways();
+				for (Integer direction: edgeDirections)
+					switch(direction)
+					{
+					case Cell.NORTH:
+						adjListArray[index].add(new Cell(++currentRow, currentCol));
+						break;
+					case Cell.SOUTH:
+						adjListArray[index].add(new Cell(--currentRow, currentCol));
+						break;
+					case Cell.EAST:
+						adjListArray[index].add(new Cell(currentRow, ++currentCol));
+						break;
+					case Cell.WEST:
+						adjListArray[index].add(new Cell(currentRow, --currentCol));
+						break;
+					}
 				// Update index
 				index++;
 			}
@@ -41,12 +56,16 @@ public class MazeAsGraph {
 	// Print function for testing 
 	public void printAdjListSize() {
 		for (int i=0; i<adjListArray.length; i++) {
-			System.out.println("Cell Vertex " + i + ": " + adjListArray[i].size());
+			LinkedList<Cell> edgeList = adjListArray[i];
+			System.out.println("Cell Vertex " + i + ": " + edgeList.size());
+			for(int j=0; j<edgeList.size(); j++) {
+				Cell edge = edgeList.get(j);
+				System.out.println("\tEdge " + j + " location: (" + edge.getRow() + ',' + edge.getColumn() + ')'); }
 		}
 			
 	}
 	
-	public LinkedList<Vertex>[] getAdjList() {
+	public LinkedList<Cell>[] getAdjList() {
 		return adjListArray;
 	}
 	
