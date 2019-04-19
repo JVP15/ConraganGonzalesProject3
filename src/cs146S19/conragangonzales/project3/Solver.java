@@ -8,7 +8,7 @@ import java.util.*;
 //TODO: Add printing functionality
 public class Solver 
 {
-
+	/*
 	public static void solveBFS(Maze unsolved) 
 	{
 		Cell[][] cells = unsolved.getCells();
@@ -44,36 +44,49 @@ public class Solver
 			u.setColor(Color.BLACK);
 		}
 
-	}
+	} */
 
-	public static void solveDFS(Maze unsolved) 
+	public static SolvedMaze solveDFS(Maze unsolved) 
 	{
-		LinkedList<Cell>[] adjList = unsolved.getAdjList();
-
-		int time = 0; // ??? Time handling ???
-		for (int i = 0; i < adjList.length; i++) {
-			Cell vertex = adjList[i].getFirst();
-			if (vertex.getColor() == Color.WHITE)
-				DFS_Visit(unsolved, vertex);
-		}
-	}
-
-	public static void DFS_Visit(Maze unsolved, Cell u) 
-	{
-		int time = ???; // ??? Time handling ???
-		u.setColor(Color.GRAY);
-		time = time + 1;
-		u.setDistance(time);
-
-		ArrayList<Cell> edges = unsolved.getNeighbors(u);
-		for (Cell v : edges) 
+		SolvedMaze maze = new SolvedMaze(unsolved.clone());
+		
+		Cell first = maze.getCellAt(0, 0);
+		first.setDistance(0);
+		first.setDiscoveryTime(0);
+		
+		Cell last = maze.getCellAt(maze.getHeight(), maze.getWidth());
+		
+		int currentDiscovery = 0;
+		Cell current = first;
+		
+		Stack<Cell> cellStack = new Stack<>();
+		cellStack.add(current);
+		
+		while(cellStack.peek() != last)
 		{
-			if(v.getColor() == Color.WHITE)
-				DFS_Visit(unsolved, v);
+			current = cellStack.pop();
+			
+			ArrayList<Cell> adjacent = maze.getNeighbors(current);
+			
+			for(int i = 0; i < adjacent.size(); i++)
+			{
+				Cell c = adjacent.get(i);
+				
+				if(c.getColor() == Color.WHITE)
+				{
+					currentDiscovery++;
+					
+					c.setColor(Color.GRAY);
+					c.setDistance(current.getDistance() + 1);
+					c.setDiscoveryTime(currentDiscovery);
+					c.setParent(current);
+					cellStack.push(c);
+				}
+				
+				current.setColor(Color.BLACK);
+			}
 		}
-		u.setColor(Color.BLACK);
-		time = time + 1;
-		u.setDiscoveryTime(time);
+		
+		return null;
 	}
-
 }
