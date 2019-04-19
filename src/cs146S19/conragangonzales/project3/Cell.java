@@ -99,10 +99,7 @@ public class Cell extends Vertex implements Cloneable
 		
 		return doorwayList;
 	}
-	/**
-	 * Creates a deep-equal copy of this cell.
-	 * @return cloned copy of this cell
-	 */
+	
 	@Override
 	public Cell clone()
 	{

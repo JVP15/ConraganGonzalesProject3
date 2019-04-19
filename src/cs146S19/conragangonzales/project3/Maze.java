@@ -6,7 +6,7 @@ import java.util.*;
  * Models and prints a maze as a specified nxn grid of cells. Solutions are
  * randomly generated pathways with exactly one entrance and exit.
  */
-public class Maze
+public class Maze implements Cloneable
 {
 	private Cell[][] cells;
 	private int width;
@@ -30,6 +30,15 @@ public class Maze
 		createMaze();
 		
 		initializeAdjList();
+	}
+	
+	public Maze(Maze other)
+	{
+		this.width = other.width;
+		this.height = other.height;
+			
+		this.cells = other.cells;
+
 	}
 
 	/**
@@ -143,7 +152,7 @@ public class Maze
 	 * 	   adjList[1] has Cells (0,1)->(0,0)->(0,2)
 	 * 	   etc.
 	 */
-	public void initializeAdjList() 
+	private void initializeAdjList() 
 	{
 		int n = getSize();
 		adjList = new LinkedList[n];
@@ -163,7 +172,8 @@ public class Maze
 		}
 	}
 	
-	public ArrayList<Integer> getPotentialDoorways(int row, int col)
+	
+	private ArrayList<Integer> getPotentialDoorways(int row, int col)
 	{
 		ArrayList<Integer> doorways = new ArrayList<>();
 		
@@ -181,6 +191,7 @@ public class Maze
 
 		return doorways;
 	}
+	
 	//TODO: This breaks on last cell in the grid (test with MazeTest.java)
 	public ArrayList<Cell> getNeighbors(Cell cell)
 	{
@@ -221,7 +232,12 @@ public class Maze
 	{
 		return width * height;
 	}
-
+	
+	public Cell getCellAt(int row, int col)
+	{
+		return cells[row][col];
+	}
+	
 	public int getWidth()
 	{
 		return width;
@@ -235,6 +251,19 @@ public class Maze
 	public Cell[][] getCells()
 	{
 		return cells;
+	}
+	
+	@Override
+	public Maze clone()
+	{
+		Maze other = new Maze(this);
+		for(int i = 0; i < height; i++)
+		{
+			for(int j = 0; j < width; j++)
+				other.cells[i][j] = this.cells[i][j].clone();
+		}
+		
+		return other;
 	}
 	
 	public ArrayList<Cell> getCellsAsList() 
