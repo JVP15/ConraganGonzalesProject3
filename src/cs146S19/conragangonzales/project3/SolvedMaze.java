@@ -13,5 +13,95 @@ public class SolvedMaze extends Maze
 		path = new ArrayList<>();
 	}
 
+	public void setPath(ArrayList<Cell> newPath)
+	{
+		path = newPath;
+	}
 	
+	
+	public void printVisitedCells()
+	{
+		System.out.print("+ +");
+		for (int i = 1; i < this.getWidth(); i++)
+		{
+			System.out.print("-+");
+		}
+		System.out.println();
+
+		for (int i = 0; i < this.getHeight(); i++)
+		{
+			
+			for (int j = 0; j < this.getWidth(); j++)
+			{
+				Cell c = this.getCellAt(i, j);
+				// if cells are connected, no wall is printed in between them
+				if (c.hasDoorwayTo(Cell.WEST))
+					System.out.print(" ");
+				else
+					System.out.print("|");			
+				
+				if(c.getDiscoveryTime() != -1)
+					System.out.print(c.getDiscoveryTime() % 10);
+				else
+					System.out.print(" ");
+			}
+			
+			System.out.println("|");
+			
+			for (int j = 0; j < this.getWidth(); j++)
+			{
+				Cell c = this.getCellAt(i, j);
+				System.out.print("+");
+
+				if (c.hasDoorwayTo(Cell.SOUTH) || c == this.getCellAt(getHeight()-1, getWidth()-1))
+					System.out.print(" ");
+				else
+					System.out.print("-");
+			}
+			System.out.println("+");
+		}
+	}
+	
+	public void printPath()
+	{
+		System.out.print("+ +");
+		for (int i = 1; i < this.getWidth(); i++)
+		{
+			System.out.print("-+");
+		}
+		System.out.println();
+
+		for (int i = 0; i < this.getHeight(); i++)
+		{
+			
+			for (int j = 0; j < this.getWidth(); j++)
+			{
+				Cell c = this.getCellAt(i, j);
+				// if cells are connected, no wall is printed in between them
+				if (c.hasDoorwayTo(Cell.WEST))
+					System.out.print(" ");
+				else
+					System.out.print("|");			
+				
+				if(path.contains(c))
+					System.out.print("#");
+				else
+					System.out.print(" ");
+			}
+			
+			System.out.println("|");
+			
+			for (int j = 0; j < this.getWidth(); j++)
+			{
+				Cell c = this.getCellAt(i, j);
+				System.out.print("+");
+
+				if (c.hasDoorwayTo(Cell.SOUTH) || c == this.getCellAt(getHeight()-1, getWidth()-1))
+					System.out.print(" ");
+				else
+					System.out.print("-");
+			}
+			System.out.println("+");
+		}
+	}
 }

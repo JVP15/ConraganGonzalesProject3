@@ -8,7 +8,8 @@ import java.util.*;
 //TODO: Add printing functionality
 public class Solver 
 {
-	/*
+	private static int time = 0;
+	
 	public static void solveBFS(Maze unsolved) 
 	{
 		Cell[][] cells = unsolved.getCells();
@@ -44,7 +45,7 @@ public class Solver
 			u.setColor(Color.BLACK);
 		}
 
-	} */
+	} 
 
 	public static SolvedMaze solveDFS(Maze unsolved) 
 	{
@@ -54,39 +55,70 @@ public class Solver
 		first.setDistance(0);
 		first.setDiscoveryTime(0);
 		
-		Cell last = maze.getCellAt(maze.getHeight(), maze.getWidth());
+		Cell last = maze.getCellAt(maze.getHeight() - 1, maze.getWidth() - 1);
 		
-		int currentDiscovery = 0;
-		Cell current = first;
 		
-		Stack<Cell> cellStack = new Stack<>();
-		cellStack.add(current);
 		
-		while(cellStack.peek() != last)
+		DFS_Visit(maze, first, null);		
+		
+		Cell current = last;
+		
+		ArrayList<Cell> path = new ArrayList<>();
+		while(current != first)
 		{
-			current = cellStack.pop();
+			path.add(0, current);
+			current = (Cell) current.getParent();
+		}
+		
+		path.add(0, first);
+		maze.setPath(path);
+		
+		time = 0;
+		
+		return maze;
+	}
+	
+	private static boolean DFS_Visit(SolvedMaze maze, Cell c, Cell parent)
+	{
+		time++;
+		
+		if(c != maze.getCellAt(maze.getHeight() - 1, maze.getWidth() - 1))
+		{
+			c.setColor(Color.BLACK);
+			c.setDiscoveryTime(time);
 			
-			ArrayList<Cell> adjacent = maze.getNeighbors(current);
+			if(parent != null)
+			{
+				c.setParent(parent);
+				c.setDistance(parent.getDistance() + 1);
+			}
+				
+			ArrayList<Cell> adjacent = maze.getNeighbors(c);
 			
 			for(int i = 0; i < adjacent.size(); i++)
 			{
-				Cell c = adjacent.get(i);
-				
-				if(c.getColor() == Color.WHITE)
+				Cell next = adjacent.get(i);
+				if(next.getColor() == Color.WHITE)
 				{
-					currentDiscovery++;
+					boolean mazeSolved = Solver.DFS_Visit(maze, next, c);
 					
-					c.setColor(Color.GRAY);
-					c.setDistance(current.getDistance() + 1);
-					c.setDiscoveryTime(currentDiscovery);
-					c.setParent(current);
-					cellStack.push(c);
+					if(mazeSolved)
+						return true;
 				}
-				
-				current.setColor(Color.BLACK);
+					
 			}
 		}
 		
-		return null;
+		else
+		{
+			c.setParent(parent);
+			c.setDiscoveryTime(time);
+			c.setDistance(parent.getDistance() + 1);
+			
+			return true;
+		}		
+		
+		
+		return false;
 	}
 }

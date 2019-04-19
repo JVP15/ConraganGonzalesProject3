@@ -47,10 +47,10 @@ public class Maze implements Cloneable
 	 */
 	public void printMaze()
 	{
-		System.out.print("+  +");
+		System.out.print("+ +");
 		for (int i = 1; i < width; i++)
 		{
-			System.out.print("--+");
+			System.out.print("-+");
 		}
 		System.out.println();
 
@@ -65,7 +65,7 @@ public class Maze implements Cloneable
 				else
 					System.out.print("|");			
 				
-				System.out.print("  ");
+				System.out.print(" ");
 			}
 			
 			System.out.println("|");
@@ -74,10 +74,10 @@ public class Maze implements Cloneable
 			{
 				System.out.print("+");
 
-				if (c.hasDoorwayTo(Cell.SOUTH))
-					System.out.print("  ");
+				if (c.hasDoorwayTo(Cell.SOUTH) || c == cells[width-1][height-1])
+					System.out.print(" ");
 				else
-					System.out.print("--");
+					System.out.print("-");
 			}
 			System.out.println("+");
 		}
@@ -142,7 +142,7 @@ public class Maze implements Cloneable
 		}
 		
 		// Create the maze exit
-		cells[width - 1][height - 1].openDoorwayTo(Cell.SOUTH);
+		//cells[width - 1][height - 1].openDoorwayTo(Cell.SOUTH);
 	}
 
 	/**
