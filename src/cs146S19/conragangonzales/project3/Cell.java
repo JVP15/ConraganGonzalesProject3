@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  */
 
-public class Cell extends Vertex
+public class Cell extends Vertex implements Cloneable
 {
 	// Indicates the cardinal direction relative to the Cell
 	public static final int NORTH = 0;
@@ -98,5 +98,25 @@ public class Cell extends Vertex
 		}
 		
 		return doorwayList;
+	}
+	/**
+	 * Creates a deep-equal copy of this cell.
+	 * @return cloned copy of this cell
+	 */
+	@Override
+	public Cell clone()
+	{
+		Cell other = new Cell(this.row, this.column);
+		other.wallsIntact = this.wallsIntact;
+		
+		for(int i = 0; i < NUMBER_OF_DIRECTIONS; i++)
+			other.doorways[i] = this.doorways[i];
+		
+		other.setColor(this.getColor());
+		other.setDiscoveryTime(this.getDiscoveryTime());
+		other.setDiscoveryTime(this.getDiscoveryTime());
+		other.setParent(this.getParent());
+		
+		return other;
 	}
 }
