@@ -8,14 +8,12 @@ import java.util.*;
  */
 public class Maze implements Cloneable
 {
-	private Cell[][] cells;
-	private int width;
-	private int height;
-	private LinkedList<Cell> adjList[];
+	private Cell[][] cells;		// 2D grid of cells forming the maze
+	private int width;			// Width of the maze
+	private int height;			// Height of the maze
 
 	/**
-	 * Maze ctor creates a maze with specified width and height.
-	 * 
+	 * Constructs a maze with specified width and height.
 	 * @param w width of the maze
 	 * @param h height of the maze
 	 */
@@ -28,10 +26,12 @@ public class Maze implements Cloneable
 		initializeCells();
 		// Construct the maze
 		createMaze();
-		
-		initializeAdjList();
 	}
 	
+	/**
+	 * Constructs a maze given another maze.
+	 * @param other target maze to clone
+	 */
 	public Maze(Maze other)
 	{
 		this.width = other.width;
@@ -146,33 +146,11 @@ public class Maze implements Cloneable
 	}
 
 	/**
-	 * Initialize this maze's adjacency list array.
-	 * Each spot in the array contains a vertex (cell) which points to its edges (neighbors).
-	 * EX: adjList[0] has Cells (0,0)->(0,1)->(1,0)
-	 * 	   adjList[1] has Cells (0,1)->(0,0)->(0,2)
-	 * 	   etc.
+	 * Determines all potential doorways of a specified cell in the maze.
+	 * @param row	row of specified cell
+	 * @param col	column of specified cell
+	 * @return		list of cardinal directions with potential doorways
 	 */
-	private void initializeAdjList() 
-	{
-		int n = getSize();
-		adjList = new LinkedList[n];
-		// Store all the maze's cells into a list
-		ArrayList<Cell> cells = getCellsAsList();
-		for(int i=0; i<n; i++) 
-		{
-			Cell currentVertex = cells.get(i);
-			// Create a new list, add cell as the head
-			adjList[i] = new LinkedList<Cell>();
-			adjList[i].add(currentVertex);
-			
-			// Add cell's neighbors to the list
-			ArrayList<Cell> currentEdges = getNeighbors(currentVertex);
-			for(Cell edge: currentEdges)
-				adjList[i].add(edge);
-		}
-	}
-	
-	
 	private ArrayList<Integer> getPotentialDoorways(int row, int col)
 	{
 		ArrayList<Integer> doorways = new ArrayList<>();
@@ -192,7 +170,6 @@ public class Maze implements Cloneable
 		return doorways;
 	}
 	
-	//TODO: This breaks on last cell in the grid (test with MazeTest.java)
 	public ArrayList<Cell> getNeighbors(Cell cell)
 	{
 		ArrayList<Cell> neighbors = new ArrayList<>();
@@ -222,15 +199,20 @@ public class Maze implements Cloneable
 		return neighbors;
 	}
 	
-	public LinkedList<Cell>[] getAdjList() 
+	public Cell[][] getCells()
 	{
-		return adjList;
+		return cells;
 	}
-
-	// Size = total # of cells in a maze
-	public int getSize()
+	
+	public ArrayList<Cell> getCellsAsList() 
 	{
-		return width * height;
+		ArrayList<Cell> cellList = new ArrayList<>();
+		
+		for (int i = 0; i < getWidth(); i++) 
+			for (int j = 0; j < getHeight(); j++) 
+				cellList.add(cells[i][j]);
+				
+		return cellList;	
 	}
 	
 	public Cell getCellAt(int row, int col)
@@ -247,12 +229,12 @@ public class Maze implements Cloneable
 	{
 		return height;
 	}
-
-	public Cell[][] getCells()
-	{
-		return cells;
-	}
 	
+	public int getSize()
+	{
+		return width * height;
+	}
+
 	@Override
 	public Maze clone()
 	{
@@ -264,16 +246,5 @@ public class Maze implements Cloneable
 		}
 		
 		return other;
-	}
-	
-	public ArrayList<Cell> getCellsAsList() 
-	{
-		ArrayList<Cell> cellList = new ArrayList<>();
-		
-		for (int i = 0; i < getWidth(); i++) 
-			for (int j = 0; j < getHeight(); j++) 
-				cellList.add(cells[i][j]);
-				
-		return cellList;	
 	}
 }

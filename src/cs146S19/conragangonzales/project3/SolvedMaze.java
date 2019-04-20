@@ -8,8 +8,11 @@ import java.util.ArrayList;
  */
 public class SolvedMaze extends Maze
 {
-	private ArrayList<Cell> path;
+	private ArrayList<Cell> path;	// Solution path for a maze
 	
+	/**
+	 * Constructs a solved maze.
+	 */
 	public SolvedMaze(Maze m)
 	{
 		super(m);

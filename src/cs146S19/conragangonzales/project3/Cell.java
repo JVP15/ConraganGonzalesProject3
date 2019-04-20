@@ -17,8 +17,8 @@ public class Cell extends Vertex implements Cloneable
 	public static final int SOUTH = 2;
 	public static final int WEST = 3;
 		
-	public static final int NUMBER_OF_DIRECTIONS = 4; // The number of directions that the Cell keeps track of
-	public static final int OPPOSITE_DIRECTION_OFFSET = 2; // The difference in value between opposite directions, i.e., SOUTH = NORTH + 2
+	public static final int NUMBER_OF_DIRECTIONS = 4; 		// The number of directions that the Cell keeps track of
+	public static final int OPPOSITE_DIRECTION_OFFSET = 2; 	// The difference in value between opposite directions, i.e., SOUTH = NORTH + 2
 
 	private boolean[] doorways; // Each index holds a boolean indicating whether the cell has a doorway in the direction given by the index
 								// i.e., doorways[0] indicates whether a doorway going north exists
@@ -29,7 +29,7 @@ public class Cell extends Vertex implements Cloneable
 	private int column;			// The column of the Cell in a maze
 
 	/**
-	 * Constructor
+	 * Constructs a cell at the specified row and column.
 	 */
 	public Cell(int row, int column)
 	{

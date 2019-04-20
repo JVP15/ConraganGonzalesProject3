@@ -8,10 +8,10 @@ import java.awt.Color;
  */
 public class Vertex
 {
-	private int distance;	// Distance from the source vertex, -1 by default
-	private int discoveryTime; // When the vertex was first discovered by a Graph Search algorithm
-	private Color color;	// Color of the vertex, Color.White by default
-	private Vertex parent;  // Parent of the vertex, null by default 
+	private int distance;		// Distance from the source vertex, -1 by default
+	private int discoveryTime; 	// When the vertex was first discovered by a Graph Search algorithm
+	private Color color;		// Color of the vertex, Color.White by default
+	private Vertex parent;  	// Parent of the vertex, null by default 
 
 	
 	/** 
