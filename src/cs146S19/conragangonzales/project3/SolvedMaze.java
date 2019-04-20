@@ -2,6 +2,10 @@ package cs146S19.conragangonzales.project3;
 
 import java.util.ArrayList;
 
+/**
+ * Models and prints a solved maze with a solution path and the solution algorithm's
+ * sequence of discovery.
+ */
 public class SolvedMaze extends Maze
 {
 	private ArrayList<Cell> path;
@@ -18,7 +22,9 @@ public class SolvedMaze extends Maze
 		path = newPath;
 	}
 	
-	
+	/**
+	 * Prints the sequence of cell discovery for a solved maze's solution.
+	 */
 	public void printVisitedCells()
 	{
 		System.out.print("+ +");
@@ -62,6 +68,9 @@ public class SolvedMaze extends Maze
 		}
 	}
 	
+	/**
+	 * Prints the solution path for a solved maze.
+	 */
 	public void printPath()
 	{
 		System.out.print("+ +");

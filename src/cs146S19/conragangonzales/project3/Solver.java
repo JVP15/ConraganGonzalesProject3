@@ -3,50 +3,83 @@ package cs146S19.conragangonzales.project3;
 import java.awt.Color;
 import java.util.*;
 
-//TODO: Test BFS
-//TODO: Finish DFS and DFSVisit
-//TODO: Add printing functionality
+/**
+ * Contains various methods to solve a maze.
+ */
 public class Solver 
 {
 	private static int time = 0;
 	
-	public static void solveBFS(Maze unsolved) 
+	/**
+	 * Searches a maze breadth-first for the exit. Records the disovery time of each cell 
+	 * and the solution path from entrance to exit.
+	 * @param unsolved an unsolved maze
+	 * @return		   a solved maze
+	 */
+	public static SolvedMaze solveBFS(Maze unsolved) 
 	{
-		Cell[][] cells = unsolved.getCells();
-		LinkedList<Cell>[] adjList = unsolved.getAdjList();
-		Queue<Cell> queue = new LinkedList<>();
+		SolvedMaze maze = new SolvedMaze(unsolved.clone());
 
-		// Initialize vertices
-		// TODO: could probably move this logic into Vertex ctor
-		for (int i = 0; i < adjList.length; i++) 
-		{
-			Cell vertex = adjList[i].getFirst();
-			vertex.setDiscoveryTime(0);
-			vertex.setDistance(0);
-		}
-
-		Cell start = cells[0][0];
-		queue.add(start);
+		Cell first = maze.getCellAt(0, 0);
+		first.setDistance(0);
+		first.setDiscoveryTime(0);
+		
+		Cell last = maze.getCellAt(maze.getHeight() - 1, maze.getWidth() - 1);
+		
+		LinkedList<Cell> queue = new LinkedList<>();
+		queue.add(first);
+		
+		// Search for the end of the maze, breadth-first
 		while (!queue.isEmpty()) 
 		{
-			Cell u = queue.remove();
-			// Grab all vertices in u's adj list (ie neighbors)
-			ArrayList<Cell> edges = unsolved.getNeighbors(u);
-			for (Cell v : edges) 
+			Cell current = queue.remove();
+			ArrayList<Cell> adjacent = maze.getNeighbors(current);
+			
+			// If we find the end of the maze, we're done
+			if(adjacent.contains(last))
 			{
-				if (v.getColor() == Color.WHITE) 
+				last.setDiscoveryTime(++time);
+				last.setParent(current);
+				current.setColor(Color.BLACK);
+				break;
+			}
+			
+			// Otherwise, continue searching
+			for (Cell c : adjacent) 
+			{
+				if (c.getColor() == Color.WHITE) 
 				{
-					v.setColor(Color.GRAY);
-					v.setDistance(u.getDistance() + 1);
-					v.setParent(u);
-					queue.add(v);
+					c.setDiscoveryTime(++time);
+					c.setParent(current);
+					queue.add(c);
 				}
 			}
-			u.setColor(Color.BLACK);
+			current.setColor(Color.BLACK);
 		}
+		
+		// Set solution path
+		Cell pathFinder = last;
+		ArrayList<Cell> path = new ArrayList<>();
+		while (pathFinder != first) 
+		{
+			path.add(0, pathFinder);
+			pathFinder = (Cell) pathFinder.getParent();
+		}
+		path.add(0, first);
+		maze.setPath(path);
+		
+		time = 0;
+		
+		return maze;
 
 	} 
 
+	/**
+	 * Searches a maze depth-first for the exit. Records the disovery time of each cell 
+	 * and the solution path from entrance to exit.
+	 * @param unsolved an unsolved maze
+	 * @return		   a solved maze
+	 */
 	public static SolvedMaze solveDFS(Maze unsolved) 
 	{
 		SolvedMaze maze = new SolvedMaze(unsolved.clone());
