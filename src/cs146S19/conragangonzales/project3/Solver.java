@@ -1,6 +1,7 @@
 package cs146S19.conragangonzales.project3;
 
 import java.awt.Color;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -153,5 +154,36 @@ public class Solver
 		
 		
 		return false;
+	}
+	
+	public static void readMaze(String filename)
+	{
+		File file = new File(filename);
+		BufferedReader input;
+		try 
+		{
+			input = new BufferedReader(new FileReader(file));
+			String line = input.readLine();
+			while(line != null)
+			{
+				char[] chars = line.toCharArray();
+				for(char c : chars) 
+				{
+					if(c == ' ')
+						
+				}
+					
+			}
+		} 
+		
+		catch (FileNotFoundException e1) 
+		{
+			e1.getMessage();
+		}
+		catch (IOException e) 
+		{
+			e.getMessage();
+		}
+
 	}
 }
