@@ -11,6 +11,8 @@ public class Maze implements Cloneable
 	private Cell[][] cells;		// 2D grid of cells forming the maze
 	private int width;			// Width of the maze
 	private int height;			// Height of the maze
+	
+	private static final int SEED = 0; // Seed for random maze generation and testing
 
 	/**
 	 * Constructs a maze with specified width and height.
@@ -99,7 +101,7 @@ public class Maze implements Cloneable
 	 */
 	private void createMaze() 
 	{
-		Random rand = new Random(0);
+		Random rand = new Random(SEED);
 
 		Stack<Cell> cellStack = new Stack<>();
 		int totalCells = cells.length * cells[0].length;
@@ -170,6 +172,11 @@ public class Maze implements Cloneable
 		return doorways;
 	}
 	
+	/**
+	 * Retreives a list of neighboring cells in the maze.
+	 * @param cell	specified cell to of neighbors to find
+	 * @return		list of neighbors
+	 */
 	public ArrayList<Cell> getNeighbors(Cell cell)
 	{
 		ArrayList<Cell> neighbors = new ArrayList<>();
