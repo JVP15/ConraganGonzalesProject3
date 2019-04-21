@@ -1,5 +1,7 @@
 package cs146S19.conragangonzales.project3;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -42,6 +44,11 @@ public class Maze implements Cloneable
 		this.cells = other.cells;
 
 	}
+	
+	public Maze(String filename) throws FileNotFoundException
+	{
+		importMaze(filename);
+	}
 
 	/**
 	 * Prints an ASCII formatted representation of a maze. '+' represents cell
@@ -83,94 +90,7 @@ public class Maze implements Cloneable
 			}
 			System.out.println("+");
 		}
-	}
-
-	/**
-	 * Constructs the grid of cells specified in the Maze constructor.
-	 */
-	private void initializeCells()
-	{
-		// Construct the grid
-		for (int i = 0; i < height; i++)
-			for (int j = 0; j < width; j++)
-				cells[i][j] = new Cell(i, j);
-	}
-
-	/**
-	 * The Maze generation algorithm constructs the maze using DFS on the cell grid.
-	 */
-	private void createMaze() 
-	{
-		Random rand = new Random(SEED);
-
-		Stack<Cell> cellStack = new Stack<>();
-		int totalCells = cells.length * cells[0].length;
-		int visitedCells = 1;
-		Cell current = cells[0][0];
-
-		while (visitedCells < totalCells) 
-		{
-			ArrayList<Integer> possibleDirections = this.getPotentialDoorways(current.getRow(), current.getColumn());
-			
-			if (possibleDirections.size() > 0)
-			{
-				int randIndex = rand.nextInt(possibleDirections.size());
-				
-				int randDirection = possibleDirections.get(randIndex);
-				Cell randCell = null;
-				
-				switch(randDirection)
-				{
-					case Cell.NORTH: 
-						randCell = cells[current.getRow()-1][current.getColumn()]; break;
-					case Cell.EAST: 
-						randCell = cells[current.getRow()][current.getColumn()+1]; break; 
-					case Cell.SOUTH: 
-						randCell = cells[current.getRow()+1][current.getColumn()]; break; 
-					case Cell.WEST: 
-						randCell = cells[current.getRow()][current.getColumn()-1]; break;
-				}
-				
-				cellStack.push(current);
-				current.openDoorwayTo(randDirection);
-				randCell.openDoorwayTo(randDirection + Cell.OPPOSITE_DIRECTION_OFFSET); 
-				current = randCell;
-				visitedCells++;
-			} 
-			else 
-			{
-				current = cellStack.pop();
-			}
-		}
-		
-		// Create the maze exit
-		//cells[width - 1][height - 1].openDoorwayTo(Cell.SOUTH);
-	}
-
-	/**
-	 * Determines all potential doorways of a specified cell in the maze.
-	 * @param row	row of specified cell
-	 * @param col	column of specified cell
-	 * @return		list of cardinal directions with potential doorways
-	 */
-	private ArrayList<Integer> getPotentialDoorways(int row, int col)
-	{
-		ArrayList<Integer> doorways = new ArrayList<>();
-		
-		if (row - 1 > 0 && cells[row - 1][col].areWallsIntact() == true)
-			doorways.add(Cell.NORTH);
-
-		if (col + 1 < width && cells[row][col + 1].areWallsIntact() == true)
-			doorways.add(Cell.EAST);
-
-		if (col - 1 > 0 && cells[row][col - 1].areWallsIntact() == true)
-			doorways.add(Cell.WEST);
-
-		if (row + 1 < height && cells[row + 1][col].areWallsIntact() == true)
-			doorways.add(Cell.SOUTH);
-
-		return doorways;
-	}
+	}	
 	
 	/**
 	 * Retreives a list of neighboring cells in the maze.
@@ -253,5 +173,163 @@ public class Maze implements Cloneable
 		}
 		
 		return other;
+	}
+	
+	/**
+	 * Constructs the grid of cells specified in the Maze constructor.
+	 */
+	private void initializeCells()
+	{
+		// Construct the grid
+		for (int i = 0; i < height; i++)
+			for (int j = 0; j < width; j++)
+				cells[i][j] = new Cell(i, j);
+	}
+
+	/**
+	 * The Maze generation algorithm constructs the maze using DFS on the cell grid.
+	 */
+	private void createMaze() 
+	{
+		Random rand = new Random(width * height);
+
+		//Stack<Cell> cellStack = new Stack<>();
+		Queue<Cell> cellStack = new LinkedList<>();
+		int totalCells = width * height; 
+		int visitedCells = 1;
+		Cell current = cells[0][0];
+
+		while (visitedCells < totalCells) 
+		{
+			ArrayList<Integer> possibleDirections = this.getPotentialDoorways(current.getRow(), current.getColumn());
+			
+			if (possibleDirections.size() > 0)
+			{
+				int randIndex = rand.nextInt(possibleDirections.size());
+				
+				int randDirection = possibleDirections.get(randIndex);
+				Cell randCell = null;
+				
+				switch(randDirection)
+				{
+					case Cell.NORTH: 
+						randCell = cells[current.getRow()-1][current.getColumn()]; break;
+					case Cell.EAST: 
+						randCell = cells[current.getRow()][current.getColumn()+1]; break; 
+					case Cell.SOUTH: 
+						randCell = cells[current.getRow()+1][current.getColumn()]; break; 
+					case Cell.WEST: 
+						randCell = cells[current.getRow()][current.getColumn()-1]; break;
+				}
+				
+				cellStack.add(current);
+				current.openDoorwayTo(randDirection);
+				randCell.openDoorwayTo(randDirection + Cell.OPPOSITE_DIRECTION_OFFSET); 
+				current = randCell;
+				current.setDiscoveryTime(visitedCells);
+				visitedCells++;
+			} 
+			else 
+			{
+				current = cellStack.remove();
+			}
+		}
+		
+		// Create the maze exit
+		//cells[width - 1][height - 1].openDoorwayTo(Cell.SOUTH);
+	}
+	
+	/**
+	 * Determines all potential doorways of a specified cell in the maze.
+	 * @param row	row of specified cell
+	 * @param col	column of specified cell
+	 * @return		list of cardinal directions with potential doorways
+	 */
+	private ArrayList<Integer> getPotentialDoorways(int row, int col)
+	{
+		ArrayList<Integer> doorways = new ArrayList<>();
+		
+		if (row - 1 > 0 && cells[row - 1][col].areWallsIntact() == true)
+			doorways.add(Cell.NORTH);
+
+		if (col + 1 < width && cells[row][col + 1].areWallsIntact() == true)
+			doorways.add(Cell.EAST);
+
+		if (col - 1 > 0 && cells[row][col - 1].areWallsIntact() == true)
+			doorways.add(Cell.WEST);
+
+		if (row + 1 < height && cells[row + 1][col].areWallsIntact() == true)
+			doorways.add(Cell.SOUTH);
+
+		return doorways;
+	}
+	
+	private void importMaze(String filename) throws FileNotFoundException 
+	{
+		File file = new File(filename);
+		Scanner in = new Scanner(file);
+		
+		// Gets the width and height of the Maze, and quits if both aren't specified on the first line
+		if(in.hasNextInt())
+		{
+			height = in.nextInt();
+			if(in.hasNextInt())
+				width = in.nextInt();
+			else
+			{
+				System.out.println("No width specified in " + filename );
+				System.exit(0);
+			}
+		}
+		else
+		{
+			System.out.println("No width or height specified in " + filename );
+			System.exit(0);
+		}
+		
+		cells = new Cell[height][width];
+		
+		initializeCells();
+		
+		in.nextLine(); // Leave the line containing sizes
+		in.nextLine(); // Skip the first line of the Maze
+		
+		in.useDelimiter("");
+		for(int i = 0; i < 2 * height - 1; i++)
+		{
+			in.next(); // Skip the first character in each row
+			
+			for(int j = 0; j < 2 * width - 1; j++)
+			{
+				String toTest = in.next();
+				if( i % 2 == 0) // True if the scanner is on a row with | in it
+				{
+					if(j % 2 == 1) // True if scanner is on column that is either '|' or ' '
+					{
+						if(!toTest.equals("|"))
+						{
+							cells[i / 2][j / 2].openDoorwayTo(Cell.EAST);
+							cells[i / 2][j / 2 + 1].openDoorwayTo(Cell.WEST); 
+						}
+					}
+				}
+		
+				else // True if the scanner is on a row with +-+ in it
+				{
+					if(j % 2 == 0) // True if scanner is on a column that is either '-' or ' '
+					{
+						if(!toTest.equals("-"))
+						{
+							cells[i / 2][j / 2].openDoorwayTo(Cell.SOUTH);
+							cells[i / 2 + 1][j / 2].openDoorwayTo(Cell.NORTH); 
+						}
+					}
+				}
+			}
+			
+			in.nextLine();
+		}
+		
+		in.close();
 	}
 }
