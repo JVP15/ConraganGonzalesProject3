@@ -1,5 +1,6 @@
 package cs146S19.conragangonzales.project3;
 
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -115,5 +116,24 @@ public class SolvedMaze extends Maze
 			}
 			System.out.println("+");
 		}
+	}
+	
+	/**
+	 * Prints some extra statistics of a solved maze's solution.
+	 */
+	public void printDetails() 
+	{
+		// Print cells in path
+		System.out.print("Path:");
+		for(Cell c: path)
+			System.out.print(" (" + c.getRow() + ',' + c.getColumn() + ')');
+		
+		// Print path length
+		System.out.println("\nLength of path: " + path.size());
+		
+		// Print visited cell amount
+		int lastCell = path.size() - 1;
+		int visitedCells = path.get(lastCell).getDiscoveryTime() + 1;
+		System.out.println("Visited cells: " + visitedCells + '\n');
 	}
 }
