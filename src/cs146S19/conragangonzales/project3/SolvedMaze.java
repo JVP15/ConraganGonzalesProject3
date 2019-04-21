@@ -136,4 +136,25 @@ public class SolvedMaze extends Maze
 		int visitedCells = path.get(lastCell).getDiscoveryTime() + 1;
 		System.out.println("Visited cells: " + visitedCells + '\n');
 	}
+	
+	public String getPath() 
+	{
+		StringBuilder pathBuilder = new StringBuilder();
+		for(Cell c: path)
+			pathBuilder.append(" (" + c.getRow() + ',' + c.getColumn() + ')');
+		
+		return pathBuilder.toString();
+	}
+	
+	public int getPathLength()
+	{
+		return path.size();
+	}
+	
+	public int getVisitedCells() 
+	{
+		int lastCell = path.size() - 1;
+		int visitedCells = path.get(lastCell).getDiscoveryTime() + 1;
+		return visitedCells;
+	}
 }
