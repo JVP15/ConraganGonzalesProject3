@@ -1,13 +1,10 @@
 package cs146S19.conragangonzales.project3;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintStream;
-
-import org.junit.Ignore;
-import org.junit.jupiter.api.BeforeEach;
+import java.io.*;
+import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -15,91 +12,142 @@ import org.junit.jupiter.api.Test;
  */
 public class SolverTest 
 { 
-	Maze unsolvedDFS;
-	Maze unsolvedBFS;
+	static ArrayList<String>  pathSolutions;
+	static ArrayList<Integer> lengthSolutions;
+	static ArrayList<Integer> visitedSolutionsDFS;
+	static ArrayList<Integer> visitedSolutionsBFS;
 	
-	@BeforeEach
-	void setUp() throws Exception 
-	{
-		unsolvedDFS = new Maze(4,4);
-		unsolvedBFS = new Maze(4,4);
-	}
+	static final int[] testSizes = {4, 8, 10, 20};
 
-	@Test
-	void testSolve()
-	{
-		SolvedMaze DFSsolution = Solver.solveDFS(unsolvedDFS);
-		SolvedMaze BFSsolution = Solver.solveBFS(unsolvedBFS);
+	@org.junit.jupiter.api.BeforeAll
+	static void testSolve()
+	{	
+		pathSolutions = new ArrayList<>();
+		lengthSolutions = new ArrayList<>();
+		visitedSolutionsDFS = new ArrayList<>();
+		visitedSolutionsBFS = new ArrayList<>();
 		
+		File file = new File("test.txt");
+		PrintStream console = System.out;
 		try 
 		{
-			File file = new File("test.txt");
-			
 			PrintStream toFile = new PrintStream(file);
-			PrintStream console = System.out;
 			System.setOut(toFile);
-			
-			unsolvedDFS.printMaze();
-			
-			System.out.println("\nDFS");
-			DFSsolution.printVisitedCells();
-			DFSsolution.printPath();
-			DFSsolution.printDetails();
-			
-			System.out.println("BFS");
-			BFSsolution.printVisitedCells();
-			BFSsolution.printPath();
-			BFSsolution.printDetails();
-			
-			System.setOut(console);
 		} 
-		 catch (FileNotFoundException err) 
+		catch (FileNotFoundException err) 
 		{
 			System.out.println("Destination file error: " + err.getMessage());
-		} 
+		}
+		
+		for (int size: testSizes) 
+		{
+			Maze unsolvedDFS = new Maze(size, size);
+			Maze unsolvedBFS = new Maze(size, size);
+		
+			SolvedMaze DFSsolution = Solver.solveDFS(unsolvedDFS);
+			SolvedMaze BFSsolution = Solver.solveBFS(unsolvedBFS);
+			
+			pathSolutions.add(DFSsolution.getPath());
+			lengthSolutions.add(DFSsolution.getPathLength());
+			visitedSolutionsDFS.add(DFSsolution.getVisitedCells());
+			visitedSolutionsBFS.add(BFSsolution.getVisitedCells());
+	
+				System.out.println(size + "x" + size);
+				unsolvedDFS.printMaze();
+			
+				System.out.println("\nDFS");
+				DFSsolution.printVisitedCells();
+				DFSsolution.printPath();
+				DFSsolution.printDetails();
+			
+				System.out.println("BFS");
+				BFSsolution.printVisitedCells();
+				BFSsolution.printPath();
+				BFSsolution.printDetails();
+		}
+		
+		System.setOut(console);
+		
 	}
 	
 	
-	@Ignore	// Enable if you want to see output to console
-	void testSolveDFS4() 
+	@Test
+	void testSolveDFS_Size4() 
 	{
 		final int n = 4;
-		SolvedMaze testSolution = Solver.solveDFS(new Maze(n,n));
-		testSolution.printVisitedCells();
-		testSolution.printPath();
-		testSolution.printDetails();
+		SolvedMaze testDFS = Solver.solveDFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(0), testDFS.getPath());
+		assertEquals((int) lengthSolutions.get(0), testDFS.getPathLength());
+		assertEquals((int) visitedSolutionsDFS.get(0), testDFS.getVisitedCells());		
 	}
 	
-	@Ignore	// Enable if you want to see output to console
-	void testSolveBFS4() 
+	@Test
+	void testSolveBFS_Size4() 
 	{
 		final int n = 4;
-		SolvedMaze testSolution = Solver.solveBFS(new Maze(n,n));
-		testSolution.printVisitedCells();
-		testSolution.printPath();
-		testSolution.printDetails();
+		SolvedMaze testBFS = Solver.solveBFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(0), testBFS.getPath());
+		assertEquals((int) lengthSolutions.get(0), testBFS.getPathLength());
+		assertEquals((int) visitedSolutionsBFS.get(0), testBFS.getVisitedCells());		
 	}
 	
-	@Ignore	// Enable if you want to see output to console
-	void testSolveDFS8() 
+	@Test
+	void testSolveDFS_Size8() 
 	{
 		final int n = 8;
-		SolvedMaze testSolution = Solver.solveDFS(new Maze(n,n));
-		testSolution.printVisitedCells();
-		System.out.println();
-		testSolution.printPath();
-		System.out.println();
-		testSolution.printDetails();
+		SolvedMaze testDFS = Solver.solveDFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(1), testDFS.getPath());
+		assertEquals((int) lengthSolutions.get(1), testDFS.getPathLength());
+		assertEquals((int) visitedSolutionsDFS.get(1), testDFS.getVisitedCells());		
 	}
 	
-	@Ignore	// Enable if you want to see output to console
-	void testSolveBFS8() 
+	@Test
+	void testSolveBFS_Size8() 
 	{
 		final int n = 8;
-		SolvedMaze testSolution = Solver.solveBFS(new Maze(n,n));
-		testSolution.printVisitedCells();
-		testSolution.printPath();
-		testSolution.printDetails();
+		SolvedMaze testBFS = Solver.solveBFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(1), testBFS.getPath());
+		assertEquals((int) lengthSolutions.get(1), testBFS.getPathLength());
+		assertEquals((int) visitedSolutionsBFS.get(1), testBFS.getVisitedCells());		
 	}
 	
+	@Test
+	void testSolveDFS_Size10() 
+	{
+		final int n = 10;
+		SolvedMaze testDFS = Solver.solveDFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(2), testDFS.getPath());
+		assertEquals((int) lengthSolutions.get(2), testDFS.getPathLength());
+		assertEquals((int) visitedSolutionsDFS.get(2), testDFS.getVisitedCells());		
+	}
+	
+	@Test
+	void testSolveBFS_Size10() 
+	{
+		final int n = 10;
+		SolvedMaze testBFS = Solver.solveBFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(2), testBFS.getPath());
+		assertEquals((int) lengthSolutions.get(2), testBFS.getPathLength());
+		assertEquals((int) visitedSolutionsBFS.get(2), testBFS.getVisitedCells());		
+	}
+	
+	@Test
+	void testSolveDFS_Size20() 
+	{
+		final int n = 20;
+		SolvedMaze testDFS = Solver.solveDFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(3), testDFS.getPath());
+		assertEquals((int) lengthSolutions.get(3), testDFS.getPathLength());
+		assertEquals((int) visitedSolutionsDFS.get(3), testDFS.getVisitedCells());		
+	}
+	
+	@Test
+	void testSolveBFS_Size20() 
+	{
+		final int n = 20;
+		SolvedMaze testBFS = Solver.solveBFS(new Maze(n,n));
+		assertEquals(pathSolutions.get(3), testBFS.getPath());
+		assertEquals((int) lengthSolutions.get(3), testBFS.getPathLength());
+		assertEquals((int) visitedSolutionsBFS.get(3), testBFS.getVisitedCells());		
+	}
 }
