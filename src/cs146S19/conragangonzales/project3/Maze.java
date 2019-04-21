@@ -179,17 +179,17 @@ public class Maze implements Cloneable
 		{
 			int row = cell.getRow();
 			int col = cell.getColumn();
-			// Add cells with doorways as neighbors
+			// Add cells with doorways as neighbors, prioritizing South and East to optimize searching
 			switch(doorway) 
 			{
 			case Cell.NORTH:
 				neighbors.add(cells[row - 1][col]);
 				break;
 			case Cell.EAST:
-				neighbors.add(cells[row][col + 1]);
+				neighbors.add(0, cells[row][col + 1]);
 				break;
 			case Cell.SOUTH:
-				neighbors.add(cells[row + 1][col]);
+				neighbors.add(0, cells[row + 1][col]);
 				break;
 			case Cell.WEST:
 				neighbors.add(cells[row][col - 1]);

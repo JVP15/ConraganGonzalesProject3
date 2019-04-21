@@ -61,7 +61,7 @@ public class SolverTest
 	
 	
 	@Ignore	// Enable if you want to see output to console
-	void testSolveDFS() 
+	void testSolveDFS4() 
 	{
 		final int n = 4;
 		SolvedMaze testSolution = Solver.solveDFS(new Maze(n,n));
@@ -71,9 +71,31 @@ public class SolverTest
 	}
 	
 	@Ignore	// Enable if you want to see output to console
-	void testSolveBFS() 
+	void testSolveBFS4() 
 	{
 		final int n = 4;
+		SolvedMaze testSolution = Solver.solveBFS(new Maze(n,n));
+		testSolution.printVisitedCells();
+		testSolution.printPath();
+		testSolution.printDetails();
+	}
+	
+	@Ignore	// Enable if you want to see output to console
+	void testSolveDFS8() 
+	{
+		final int n = 8;
+		SolvedMaze testSolution = Solver.solveDFS(new Maze(n,n));
+		testSolution.printVisitedCells();
+		System.out.println();
+		testSolution.printPath();
+		System.out.println();
+		testSolution.printDetails();
+	}
+	
+	@Ignore	// Enable if you want to see output to console
+	void testSolveBFS8() 
+	{
+		final int n = 8;
 		SolvedMaze testSolution = Solver.solveBFS(new Maze(n,n));
 		testSolution.printVisitedCells();
 		testSolution.printPath();
