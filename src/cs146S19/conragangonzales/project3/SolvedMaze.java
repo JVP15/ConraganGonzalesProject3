@@ -137,6 +137,9 @@ public class SolvedMaze extends Maze
 		System.out.println("Visited cells: " + visitedCells + '\n');
 	}
 	
+	/**
+	 * Gets the solution path of cells as a string.
+	 */
 	public String getPath() 
 	{
 		StringBuilder pathBuilder = new StringBuilder();
@@ -146,11 +149,17 @@ public class SolvedMaze extends Maze
 		return pathBuilder.toString();
 	}
 	
+	/**
+	 * Gets the length of solution path.
+	 */
 	public int getPathLength()
 	{
 		return path.size();
 	}
 	
+	/**
+	 * Gets the number of visited cells.
+	 */
 	public int getVisitedCells() 
 	{
 		int lastCell = path.size() - 1;

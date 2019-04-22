@@ -24,6 +24,7 @@ class MazeTest
 		testSizes = Arrays.asList(4, 5, 6, 7, 8, 9, 10);
 	}
 
+	// Test mazes are printing correctly
 	@Test
 	void testMaze() 
 	{
@@ -35,7 +36,22 @@ class MazeTest
 		}
 	}
 	
-	@Ignore
+	// Test mazes are imported correctly
+	@Test
+	void testImportMaze()
+	{
+		try 
+		{
+			new Maze("maze4.txt").printMaze();
+		} 
+		catch (FileNotFoundException e)
+		{
+			System.out.println("Input file error: " + e.getMessage());
+		}
+	}
+	
+	// Test mazes are recording neighbors correctly
+	@Test
 	void testNeighbors() 
 	{
 		Maze testMaze = new Maze(4,4);

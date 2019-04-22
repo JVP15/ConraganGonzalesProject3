@@ -1,7 +1,6 @@
 package cs146S19.conragangonzales.project3;
 
 import java.awt.Color;
-import java.io.*;
 import java.util.*;
 
 /**
@@ -112,6 +111,7 @@ public class Solver
 		return maze;
 	}
 	
+	// Helper method for solveDFS
 	private static boolean DFS_Visit(SolvedMaze maze, Cell c, Cell parent)
 	{
 		time++;
