@@ -45,6 +45,11 @@ public class Maze implements Cloneable
 
 	}
 	
+	/**
+	 * Constructs a maze from a provided file.
+	 * @param filename	name of file to import maze from
+	 * @throws FileNotFoundException
+	 */
 	public Maze(String filename) throws FileNotFoundException
 	{
 		importMaze(filename);
@@ -191,10 +196,9 @@ public class Maze implements Cloneable
 	 */
 	private void createMaze() 
 	{
-		Random rand = new Random(width * height);
+		Random rand = new Random(SEED);
 
-		//Stack<Cell> cellStack = new Stack<>();
-		Queue<Cell> cellStack = new LinkedList<>();
+		Stack<Cell> cellStack = new Stack<>();
 		int totalCells = width * height; 
 		int visitedCells = 1;
 		Cell current = cells[0][0];
@@ -231,12 +235,9 @@ public class Maze implements Cloneable
 			} 
 			else 
 			{
-				current = cellStack.remove();
+				current = cellStack.pop();
 			}
 		}
-		
-		// Create the maze exit
-		//cells[width - 1][height - 1].openDoorwayTo(Cell.SOUTH);
 	}
 	
 	/**
@@ -264,6 +265,11 @@ public class Maze implements Cloneable
 		return doorways;
 	}
 	
+	/**
+	 * Reads and creates an ASCII maze from a specified text file.
+	 * @param filename	text file to read maze from
+	 * @throws FileNotFoundException
+	 */
 	private void importMaze(String filename) throws FileNotFoundException 
 	{
 		File file = new File(filename);
