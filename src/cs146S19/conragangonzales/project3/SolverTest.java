@@ -20,15 +20,19 @@ public class SolverTest
 	static final int[] testSizes = {4, 8, 10, 20};
 
 	@org.junit.jupiter.api.BeforeAll
-	static void testSolve()
+	static void setupTests()
 	{	
+		/*
+		 * Setup tests for random/extra mazes.
+		 */
+		PrintStream console = System.out;
 		pathSolutions = new ArrayList<>();
 		lengthSolutions = new ArrayList<>();
 		visitedSolutionsDFS = new ArrayList<>();
 		visitedSolutionsBFS = new ArrayList<>();
 		
-		File file = new File("test.txt");
-		PrintStream console = System.out;
+		File file = new File("testRandomMazes.txt");
+
 		try 
 		{
 			PrintStream toFile = new PrintStream(file);
@@ -39,6 +43,8 @@ public class SolverTest
 			System.out.println("Destination file error: " + err.getMessage());
 		}
 		
+		System.out.println("This file shows test solutions of randomly generated (seeded) mazes.\n");
+		// Solve all extra mazes, store results for future tests
 		for (int size: testSizes) 
 		{
 			Maze unsolvedDFS = new Maze(size, size);
@@ -66,10 +72,116 @@ public class SolverTest
 				BFSsolution.printDetails();
 		}
 		
+		/*
+		 * Setup tests for provided mazes.
+		 */
+		ArrayList<String> providedTestMazes = new ArrayList<>();
+		providedTestMazes.add("maze4.txt");
+		providedTestMazes.add("maze6.txt");
+		providedTestMazes.add("maze8.txt");
+		providedTestMazes.add("maze10.txt");
+		providedTestMazes.add("maze20.txt");
+		
+		file = new File("testProvidedMazes.txt");
+
+		try 
+		{
+			PrintStream toFile = new PrintStream(file);
+			System.setOut(toFile);
+		} 
+		catch (FileNotFoundException err) 
+		{
+			System.out.println("Destination file error: " + err.getMessage());
+		}
+		
+		System.out.println("This file shows test solutions of mazes provided by from instructor.\n");
+		// Solve all provided mazes, store results for future tests
+		for(String maze : providedTestMazes)
+		{
+					
+			SolvedMaze DFSsolution = null;
+			SolvedMaze BFSsolution = null;
+					
+			try
+			{
+				Maze unsolvedDFS = new Maze(maze);
+				Maze unsolvedBFS = new Maze(maze);
+				DFSsolution = Solver.solveDFS(unsolvedDFS);
+				BFSsolution = Solver.solveBFS(unsolvedBFS);
+			}
+			catch(FileNotFoundException err) 
+			{
+				System.out.println("Input test file error:  " + err.getMessage());
+			}
+			
+			pathSolutions.add(DFSsolution.getPath());
+			lengthSolutions.add(DFSsolution.getPathLength());
+			visitedSolutionsDFS.add(DFSsolution.getVisitedCells());
+			visitedSolutionsBFS.add(BFSsolution.getVisitedCells());
+			
+			System.out.println(DFSsolution.getHeight() + "x" + DFSsolution.getWidth());
+			DFSsolution.printMaze();
+		
+			System.out.println("\nDFS");
+			DFSsolution.printVisitedCells();
+			DFSsolution.printPath();
+			DFSsolution.printDetails();
+		
+			System.out.println("BFS");
+			BFSsolution.printVisitedCells();
+			BFSsolution.printPath();
+			BFSsolution.printDetails();
+		}
+		
 		System.setOut(console);
 		
 	}
 	
+	@Test
+	void testSolve_ProvidedMazes()
+	{
+		// Initialize test variables
+		ArrayList<String> providedTestMazes = new ArrayList<>();
+		providedTestMazes.add("maze4.txt");
+		providedTestMazes.add("maze6.txt");
+		providedTestMazes.add("maze8.txt");
+		providedTestMazes.add("maze10.txt");
+		providedTestMazes.add("maze20.txt");
+		
+		// Test all provided mazes
+		for(String maze : providedTestMazes)
+		{
+			
+			SolvedMaze DFSsolution = null;
+			SolvedMaze BFSsolution = null;
+			
+			try
+			{
+				Maze unsolvedDFS = new Maze(maze);
+				Maze unsolvedBFS = new Maze(maze);
+				DFSsolution = Solver.solveDFS(unsolvedDFS);
+				BFSsolution = Solver.solveBFS(unsolvedBFS);
+			}
+			catch(FileNotFoundException err) 
+			{
+				System.out.println("Input test file error:  " + err.getMessage());
+			}
+			
+			int index = providedTestMazes.indexOf(maze) + 4; // indexed location of provided maze's solutions
+			// Test DFS expected solution vs actual 
+			assertEquals(pathSolutions.get(index), DFSsolution.getPath());
+			assertEquals((int) lengthSolutions.get(index), DFSsolution.getPathLength());
+			assertEquals((int) visitedSolutionsDFS.get(index), DFSsolution.getVisitedCells());	
+			// Test BFS expected solution vs actual
+			assertEquals(pathSolutions.get(index), BFSsolution.getPath());
+			assertEquals((int) lengthSolutions.get(index), BFSsolution.getPathLength());
+			assertEquals((int) visitedSolutionsBFS.get(index), BFSsolution.getVisitedCells());	
+		}
+	}
+	
+	//
+	// The following tests are for the random mazes generated during setup.
+	//
 	
 	@Test
 	void testSolveDFS_Size4() 
